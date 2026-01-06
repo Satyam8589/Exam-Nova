@@ -1,0 +1,101 @@
+.exam-detail-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.exam-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.exam-header h1 {
+  color: #2c3e50;
+  margin: 0;
+}
+
+.bookmark-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.bookmark-btn:not(.bookmarked) {
+  background: #3498db;
+  color: white;
+}
+
+.bookmark-btn.bookmarked {
+  background: #f39c12;
+  color: white;
+}
+
+.exam-info {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.info-section {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  background: white;
+}
+
+.info-section h2 {
+  margin-top: 0;
+  color: #34495e;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 10px;
+}
+
+.info-section p {
+  margin: 10px 0;
+  color: #555;
+}
+
+.info-section a {
+  color: #3498db;
+  text-decoration: none;
+}
+
+.info-section a:hover {
+  text-decoration: underline;
+}
+
+.status {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.status.published {
+  background: #27ae60;
+  color: white;
+}
+
+.status.draft {
+  background: #f39c12;
+  color: white;
+}
+
+.status.archived {
+  background: #95a5a6;
+  color: white;
+}
+
+.loading, .error {
+  text-align: center;
+  padding: 50px;
+  font-size: 18px;
+  color: #666;
+}
