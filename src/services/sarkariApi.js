@@ -1,34 +1,40 @@
-import sampleData from '../data/data.json';
+import sampleData from '../data/jobs.json';
 
 // RapidAPI configuration
 const RAPIDAPI_KEY = 'a7301d4997msh19167ea7c00162dp188d11jsne14adad6fd94'; // Replace with your actual key
 const RAPIDAPI_HOST = 'sarkari-result.p.rapidapi.com';
 
-// Transform RapidAPI response to our data format
-const transformRapidApiData = (apiData) => {
-  // Assuming the API returns an array of job objects
-  // Adjust this transformation based on actual API response structure
-  return apiData.map(job => ({
-    name: job.title || job.name || 'Unknown Title',
-    title: job.title || job.name || 'Unknown Title',
-    organization: job.organization || job.department || 'Unknown Organization',
-    state: job.state || job.location || 'All India',
-    category: job.category || determineCategory(job.title),
-    qualification: job.qualification || job.eligibility || 'Varies',
-    applicationStart: job.applicationStart || job.startDate,
-    applicationDeadline: job.applicationDeadline || job.deadline || job.lastDate,
-    examDate: job.examDate || job.testDate,
-    resultDate: job.resultDate || job.declarationDate,
-    applicationFee: job.fee || job.applicationFee || 'Varies',
-    ageLimit: job.ageLimit || job.age || '18+ years',
-    vacancies: job.vacancies || job.posts || 'To be announced',
-    description: job.description || job.details || 'No description available',
-    notificationLink: job.notificationLink || job.pdfLink || '#',
-    applicationLink: job.applicationLink || job.applyLink || '#'
-  }));
+// Transform scraped data from jobs.json to our exam format
+const transformJobsData = (jobsData) => {
+  return jobsData.map((job, index) => {
+    const title = job.title || 'Unknown Title';
+    const category = determineCategory(title);
+    
+    // Extract dates from description if available
+    const dates = extractDatesFromDescription(job.description || '');
+    
+    return {
+      name: title,
+      title: title,
+      organization: job.organization || extractOrganization(title) || 'Government of India',
+      state: extractState(title) || 'All India',
+      category: category,
+      qualification: extractQualification(job.eligibility) || 'As per notification',
+      applicationStart: dates.startDate || 'Check Notification',
+      applicationDeadline: dates.deadline || 'Check Notification',
+      examDate: dates.examDate || 'To be announced',
+      resultDate: dates.resultDate || 'To be announced',
+      applicationFee: formatApplicationFee(job.applicationFee) || 'As per category',
+      ageLimit: job.ageLimit || '18-30 years',
+      vacancies: extractVacancies(title) || 'Multiple',
+      description: cleanDescription(job.description) || 'Visit official website for complete details',
+      notificationLink: job.url || '#',
+      applicationLink: job.applyLink || job.url || '#'
+    };
+  });
 };
 
-// Determine category based on title keywords
+// Helper functions for data transformation
 const determineCategory = (title) => {
   const titleLower = title.toLowerCase();
   if (titleLower.includes('upsc') || titleLower.includes('civil services')) return 'UPSC';
@@ -38,7 +44,75 @@ const determineCategory = (title) => {
   if (titleLower.includes('police') || titleLower.includes('constable')) return 'Police';
   if (titleLower.includes('army') || titleLower.includes('navy') || titleLower.includes('air force')) return 'Defense';
   if (titleLower.includes('psc') || titleLower.includes('public service')) return 'State PSC';
+  if (titleLower.includes('dsssb')) return 'DSSSB';
+  if (titleLower.includes('rssb') || titleLower.includes('rajasthan')) return 'State PSC';
   return 'Other';
+};
+
+const extractOrganization = (title) => {
+  if (title.includes('DSSSB')) return 'Delhi Subordinate Services Selection Board';
+  if (title.includes('RSSB')) return 'Rajasthan Staff Selection Board';
+  if (title.includes('UP Police')) return 'Uttar Pradesh Police Recruitment';
+  if (title.includes('SSC')) return 'Staff Selection Commission';
+  if (title.includes('UPSC')) return 'Union Public Service Commission';
+  if (title.includes('Railway') || title.includes('RRB')) return 'Railway Recruitment Board';
+  return null;
+};
+
+const extractState = (title) => {
+  if (title.includes('Delhi') || title.includes('DSSSB')) return 'Delhi';
+  if (title.includes('Rajasthan') || title.includes('RSSB')) return 'Rajasthan';
+  if (title.includes('UP') || title.includes('Uttar Pradesh')) return 'Uttar Pradesh';
+  if (title.includes('All India')) return 'All India';
+  return null;
+};
+
+const extractVacancies = (title) => {
+  const match = title.match(/(\d+[,\d]*)\s*(?:Post|posts|vacancy|vacancies)/i);
+  return match ? match[1].replace(',', '') : null;
+};
+
+const extractQualification = (eligibility) => {
+  if (!eligibility || !Array.isArray(eligibility)) return null;
+  const qual = eligibility.join(' ');
+  if (qual.includes('10th') || qual.includes('Xth')) return '10th Pass';
+  if (qual.includes('12th') || qual.includes('XIIth')) return '12th Pass';
+  if (qual.includes('Graduate') || qual.includes('Degree')) return 'Graduate';
+  if (qual.includes('Post Graduate')) return 'Post Graduate';
+  return null;
+};
+
+const extractDatesFromDescription = (description) => {
+  const dates = { startDate: null, deadline: null, examDate: null, resultDate: null };
+  
+  // Try to extract dates from description
+  const startMatch = description.match(/Start Date\s*:\s*([\d\s\w]+)/i);
+  const deadlineMatch = description.match(/Last Date\s*:\s*([\d\s\w]+)/i);
+  const examMatch = description.match(/Exam Date\s*:\s*([\d\s\w]+)/i);
+  
+  if (startMatch) dates.startDate = startMatch[1].trim();
+  if (deadlineMatch) dates.deadline = deadlineMatch[1].trim();
+  if (examMatch) dates.examDate = examMatch[1].trim();
+  
+  return dates;
+};
+
+const formatApplicationFee = (feeObj) => {
+  if (!feeObj || typeof feeObj !== 'object') return null;
+  const feeStr = JSON.stringify(feeObj);
+  const match = feeStr.match(/₹\s*\d+/);  
+  return match ? match[0] : null;
+};
+
+const cleanDescription = (description) => {
+  if (!description) return null;
+  // Remove HTML/CSS and keep only relevant text
+  let cleaned = description.replace(/<[^>]*>/g, ' ');
+  cleaned = cleaned.replace(/\{[^}]*\}/g, ' ');
+  cleaned = cleaned.replace(/\s+/g, ' ');
+  cleaned = cleaned.trim();
+  // Return first 300 characters
+  return cleaned.length > 300 ? cleaned.substring(0, 300) + '...' : cleaned;
 };
 
 // Fetch data from RapidAPI
@@ -60,7 +134,7 @@ const fetchFromRapidAPI = async () => {
     console.log('RapidAPI response:', data);
 
     // Transform the data to match our format
-    return transformRapidApiData(data);
+    return transformJobsData(data);
   } catch (error) {
     console.error('RapidAPI fetch failed:', error);
     throw error;
@@ -81,9 +155,9 @@ export const fetchLatestJobs = async () => {
     console.warn('RapidAPI failed, falling back to sample data:', error.message);
   }
 
-  // Fallback to sample data
-  console.log('Using sample data as fallback');
-  return sampleData;
+  // Fallback to sample data (jobs.json)
+  console.log('Using jobs.json data as fallback');
+  return transformJobsData(sampleData);
 };
 
 // Fetch job details (if API supports it)

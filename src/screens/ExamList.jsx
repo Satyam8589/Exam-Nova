@@ -7,6 +7,7 @@ const ExamList = () => {
   const [exams, setExams] = useState([]);
   const [filteredExams, setFilteredExams] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
   const [filters, setFilters] = useState({
     state: '',
     category: '',
@@ -22,7 +23,7 @@ const ExamList = () => {
 
   useEffect(() => {
     applyFilters();
-  }, [exams, filters]);
+  }, [exams, filters, searchTerm]);
 
   const fetchExams = async () => {
     try {
@@ -66,6 +67,16 @@ const ExamList = () => {
   const applyFilters = () => {
     let filtered = exams.filter(exam => exam.status === 'published'); // Only show published by default
 
+    // Apply search filter
+    if (searchTerm) {
+      const searchLower = searchTerm.toLowerCase();
+      filtered = filtered.filter(exam =>
+        exam.title.toLowerCase().includes(searchLower) ||
+        exam.organization.toLowerCase().includes(searchLower) ||
+        exam.category.toLowerCase().includes(searchLower)
+      );
+    }
+
     if (filters.state) {
       filtered = filtered.filter(exam => exam.state === filters.state);
     }
@@ -102,7 +113,20 @@ const ExamList = () => {
 
   return (
     <div className="exam-list-container">
-      <h1>Government Exam Notifications</h1>
+      <div className="header-section">
+        <h1>🎓 Latest Government Job Notifications</h1>
+        <p className="subtitle">Find the latest Sarkari exams and job opportunities</p>
+      </div>
+
+      <div className="search-section">
+        <input
+          type="text"
+          className="search-bar"
+          placeholder="🔍 Search by job title, organization, or category..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
 
       <div className="filters">
         <select
@@ -171,55 +195,63 @@ const ExamList = () => {
               <div className="exam-category-badge">
                 {exam.category}
               </div>
-              <span className={`status ${exam.status}`}>{exam.status}</span>
+              <span className="vacancies-badge">📌 {exam.vacancies} Posts</span>
             </div>
 
             <h3 className="exam-title">{exam.title}</h3>
 
             <div className="exam-info">
               <div className="info-row">
-                <span className="info-label">Organization:</span>
+                <span className="info-icon">🏛️</span>
                 <span className="info-value">{exam.organization}</span>
               </div>
 
               <div className="info-row">
-                <span className="info-label">State:</span>
+                <span className="info-icon">📍</span>
                 <span className="info-value">{exam.state}</span>
               </div>
 
               <div className="info-row">
-                <span className="info-label">Qualification:</span>
+                <span className="info-icon">🎓</span>
                 <span className="info-value">{exam.qualification}</span>
-              </div>
-
-              <div className="info-row">
-                <span className="info-label">Vacancies:</span>
-                <span className="info-value">{exam.vacancies}</span>
               </div>
             </div>
 
             <div className="exam-dates">
-              <div className="date-item">
-                <span className="date-label">Apply by:</span>
-                <span className="date-value">{exam.applicationDeadline || 'TBA'}</span>
+              <div className="date-item urgent">
+                <span className="date-icon">⏰</span>
+                <div className="date-content">
+                  <span className="date-label">Last Date:</span>
+                  <span className="date-value">{exam.applicationDeadline || 'TBA'}</span>
+                </div>
               </div>
 
               <div className="date-item">
-                <span className="date-label">Exam Date:</span>
-                <span className="date-value">{exam.examDate || 'TBA'}</span>
+                <span className="date-icon">📅</span>
+                <div className="date-content">
+                  <span className="date-label">Exam:</span>
+                  <span className="date-value">{exam.examDate || 'TBA'}</span>
+                </div>
               </div>
             </div>
 
-            <div className="exam-actions">
-              <button className="btn-primary">View Details</button>
-              <button className="btn-secondary">Apply Now</button>
+            <div className="exam-footer">
+              <div className="fee-info">
+                <span className="fee-icon">💰</span>
+                <span className="fee-text">{exam.applicationFee}</span>
+              </div>
+              <button className="btn-view-details">View Details →</button>
             </div>
           </div>
         ))}
       </div>
 
       {filteredExams.length === 0 && (
-        <div className="no-exams">No exams found matching your filters.</div>
+        <div className="no-exams">
+          <div className="no-exams-icon">📭</div>
+          <h3>No Jobs Found</h3>
+          <p>Try adjusting your search or filters</p>
+        </div>
       )}
     </div>
   );
