@@ -1,7 +1,7 @@
 import sampleData from '../data/data.json';
 
 // RapidAPI configuration
-const RAPIDAPI_KEY = 'YOUR_RAPIDAPI_KEY_HERE'; // Replace with your actual key
+const RAPIDAPI_KEY = 'a7301d4997msh19167ea7c00162dp188d11jsne14adad6fd94'; // Replace with your actual key
 const RAPIDAPI_HOST = 'sarkari-result.p.rapidapi.com';
 
 // Transform RapidAPI response to our data format
