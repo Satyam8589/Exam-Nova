@@ -6,6 +6,8 @@ import { signOut } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 
 const Header = ({ user }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [userRole, setUserRole] = useState(null);
@@ -154,7 +156,7 @@ const Header = ({ user }) => {
               )}
             </div>
           ) : (
-            <Link to="/" className="btn btn-login">🔐 Login</Link>
+            <Link to="/login" className="btn btn-login">🔐 Login</Link>
           )}
         </div>
 

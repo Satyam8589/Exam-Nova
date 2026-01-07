@@ -46,13 +46,12 @@ const AppContent = () => {
     );
   }
 
-  const showHeader = !['/'].includes(location.pathname);
-
   return (
     <>
-      {showHeader && <Header user={user} />}
+      <Header user={user} />
       <Routes>
-        <Route path='/' element={user ? <Navigate to="/exams" /> : <LoginScreen />} />
+        <Route path='/' element={<ExamList />} />
+        <Route path='/login' element={user ? <Navigate to="/exams" /> : <LoginScreen />} />
         <Route
           path='/exams'
           element={<ExamList />}
