@@ -11,6 +11,7 @@ import LoginScreen from './screens/LoginScreen';
 import ExamList from './screens/ExamList';
 import ExamDetail from './screens/ExamDetail';
 import Bookmarks from './screens/Bookmarks';
+import RemindersScreen from './screens/RemindersScreen';
 import AdminPanel from './screens/AdminPanel';
 import Header from './components/header';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
@@ -63,6 +64,10 @@ const AppContent = () => {
         <Route
           path='/bookmarks'
           element={user ? <Bookmarks /> : <Navigate to="/" />}
+        />
+        <Route
+          path='/reminders'
+          element={user ? <RemindersScreen /> : <Navigate to="/" />}
         />
         <Route
           path='/admin'

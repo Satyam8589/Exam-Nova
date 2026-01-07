@@ -23,7 +23,7 @@ const Bookmarks = () => {
       // Get all jobs from API
       const allJobs = await fetchLatestJobs();
       const transformedJobs = allJobs.map((job, index) => ({
-        id: `api-${index}`,
+        id: `exam-${index}`,
         title: job.title || 'Untitled Job',
         organization: job.organization || 'Government',
         state: job.state || 'Central',

@@ -67,6 +67,7 @@ const Header = ({ user }) => {
   const navItems = [
     { path: '/exams', label: 'Browse Exams', icon: '📋' },
     { path: '/bookmarks', label: 'My Exams', icon: '⭐', requiresAuth: true },
+    { path: '/reminders', label: 'Reminders', icon: '🔔', requiresAuth: true },
   ];
 
   if (userRole === 'admin') {
