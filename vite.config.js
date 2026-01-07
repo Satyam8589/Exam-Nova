@@ -15,7 +15,6 @@ export default defineConfig({
       output: {
         manualChunks: {
           'react-vendor': ['react', 'react-dom', 'react-router-dom'],
-          'firebase-vendor': ['firebase'],
         },
         assetFileNames: (assetInfo) => {
           if (assetInfo.name.endsWith('.css')) {
@@ -33,5 +32,9 @@ export default defineConfig({
     modules: {
       localsConvention: 'camelCase'
     }
+  },
+  optimizeDeps: {
+    include: ['react', 'react-dom', 'react-router-dom'],
+    exclude: ['firebase', 'firebase/app', 'firebase/auth', 'firebase/firestore']
   }
 })
