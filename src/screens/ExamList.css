@@ -93,7 +93,7 @@
 .exam-card {
   border: none;
   border-radius: 20px;
-  padding: 28px;
+  padding: 20px;
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   background: white;
@@ -121,7 +121,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 18px;
+  margin-bottom: 14px;
 }
 
 .exam-category-badge {
@@ -171,7 +171,7 @@
 }
 
 .exam-title {
-  margin: 0 0 20px 0;
+  margin: 0 0 14px 0;
   color: #2c3e50;
   font-size: 1.35rem;
   font-weight: 700;
@@ -180,17 +180,17 @@
 }
 
 .exam-info {
-  margin-bottom: 20px;
+  margin-bottom: 14px;
   background: #f8f9fa;
-  padding: 15px;
-  border-radius: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
 }
 
 .info-row {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
+  gap: 8px;
+  margin-bottom: 6px;
 }
 
 .info-row:last-child {
@@ -217,17 +217,17 @@
 
 .exam-dates {
   background: #fff3cd;
-  padding: 16px;
-  border-radius: 12px;
-  margin-bottom: 20px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  margin-bottom: 14px;
   border-left: 4px solid #ffc107;
 }
 
 .date-item {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 12px;
+  gap: 10px;
+  margin-bottom: 8px;
 }
 
 .date-item:last-child {
@@ -272,8 +272,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 20px;
-  padding-top: 20px;
+  margin-top: 14px;
+  padding-top: 14px;
   border-top: 2px solid #f1f3f5;
 }
 
@@ -297,18 +297,18 @@
   background: linear-gradient(135deg, #667eea, #764ba2);
   color: white;
   border: none;
-  padding: 12px 24px;
-  border-radius: 25px;
+  padding: 8px 18px;
+  border-radius: 20px;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 13px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   box-shadow: 0 4px 15px rgba(102,126,234,0.3);
 }
 
 .btn-view-details:hover {
-  transform: translateX(5px);
-  box-shadow: 0 6px 20px rgba(102,126,234,0.4);
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 8px 25px rgba(102,126,234,0.5);
 }
 
 .no-exams {
@@ -378,7 +378,7 @@
   }
 
   .exam-card {
-    padding: 20px;
+    padding: 16px;
   }
 
   .exam-title {
